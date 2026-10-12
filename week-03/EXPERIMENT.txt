@@ -1,0 +1,40 @@
+蒲丰投针实验要求
+================
+
+实验场景：在纸面上画一组等距平行线，随机投下一根短针；重复很多次，
+统计针碰到线的比例，用它估计 π。
+
+四个量：
+- L（needle_length）：针的全长。本实验限定 0 < L <= d。
+- d（line_spacing）：相邻平行线的间距。
+- angle：针与平行线的夹角，弧度制；0 表示平行，π/2 表示垂直。
+- distance：针的中心到最近一条线的垂直距离（不是针尖到线的距离）。
+
+取样规则：
+- 独立、均匀地抽取 distance ∈ [0, d/2] 和 angle ∈ [0, π/2]。
+- 位置与方向具有对称性，所以只模拟这一半距离和这一种锐角方向。
+
+相交判据：
+- 比较 distance 与 L/2 × sin(angle)。
+- distance <= L/2 × sin(angle) 时算相交，包括恰好触线。
+- 恰好触线（distance == L/2 × sin(angle)）也记为相交。
+
+估计公式：
+- 理论相交概率 p = 2L / (πd)
+- 用 K/N 估计 p，得到 π ≈ 2LN / (dK)
+- K = 0 时不能用这个式子估计。
+
+实现要求：
+1. crosses_line(distance, angle, needle_length) -> bool
+   - 判断给定中心距和夹角下，针是否与线相交。
+2. estimate_pi(num_tosses, crossings, needle_length, line_spacing) -> float
+   - 用规定公式估计 π，不能直接返回 math.pi。
+3. simulate(num_tosses, seed=42, needle_length=0.5, line_spacing=1.0) -> dict
+   - 执行投针实验，返回结果字典。
+   - 默认 seed=42，每次实验只初始化一次随机数生成器。
+   - 结果保存到 results.csv。
+
+默认参数：
+- 针长 needle_length = 0.5
+- 线距 line_spacing = 1.0
+- 投针数分别为 1000、10000、100000
