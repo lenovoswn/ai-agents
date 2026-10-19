@@ -1,6 +1,16 @@
+# 虚拟环境
 .venv/
+
+# Python 缓存
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# pytest 缓存
 .pytest_cache/
+
+# LaTeX 中间文件
 *.aux
 *.log
 *.out
@@ -8,3 +18,15 @@ __pycache__/
 *.fdb_latexmk
 *.fls
 *.xdv
+*.bbl
+*.blg
+
+# 凭据和敏感文件
+.env
+*.key
+*.pem
+*.crt
+
+# 系统文件
+.DS_Store
+Thumbs.db
