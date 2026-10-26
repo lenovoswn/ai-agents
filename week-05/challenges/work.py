@@ -1,4 +1,7 @@
 """W5 综合选做：按合同完成函数，使用 challenges 中的公开测试验收。"""
+#C题
+
+import numpy as np
 
 
 def summarize_values(values):
@@ -37,4 +40,22 @@ def compare_measurements(ids, baseline, current, threshold):
     恰好等于阈值属于正常；空输入也要返回三个对应的空容器。
     先把 NumPy 整数转成 Python int 再计算，避免小 dtype 溢出。
     """
-    raise NotImplementedError("请实现 compare_measurements")
+    # 逐位取出两次测量，先转成 Python int 再相减：避免 int8 / uint8
+    # 这类小 dtype 直接做数组减法时溢出（例如 0 - 255 会绕回 1）。
+    delta = np.array(
+        [int(after) - int(before) for before, after in zip(baseline, current)],
+        dtype=np.int64,
+    )
+
+    alerts = []
+    normal = {}
+    # zip 把三个序列按位置对齐：同一位置对应同一编号的两次测量。
+    for name, change, value in zip(ids, delta, current):
+        # 严格大于才算异常：幅度恰好等于阈值属于正常。
+        if abs(int(change)) > threshold:
+            alerts.append(name)
+        else:
+            # normal 保存的是新的测量值，不是变化量。
+            normal[name] = int(value)
+
+    return {"delta": delta, "alerts": alerts, "normal": normal}
